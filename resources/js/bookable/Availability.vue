@@ -41,7 +41,7 @@
     <button class="btn btn-secondary btn-block" @click="check" :disabled="loading">
       <span v-if="!loading">Check!</span>
       <span v-if="loading">
-        <i class="fas fa-cog fa-spin"></i> Checking...
+        <i class="fas fa-circle-notch fa-spin"></i> Checking...
       </span>
     </button>
   </div>
@@ -65,7 +65,7 @@ export default {
     };
   },
   methods: {
-    check() {
+    async check() {
       this.loading = true;
       this.errors = null;
 
@@ -74,20 +74,21 @@ export default {
         to: this.to
       });
 
-      axios
-        .get(
+      try {
+        this.status = (await axios.get(
           `/api/bookables/${this.bookableId}/availability?from=${this.from}&to=${this.to}`
-        )
-        .then(response => {
-          this.status = response.status;
-        })
-        .catch(error => {
-          if (is422(error)) {
-            this.errors = error.response.data.errors;
-          }
-          this.status = error.response.status;
-        })
-        .then(() => (this.loading = false));
+        )).status;
+        this.$emit("availability", this.hasAvailability);
+      } catch (err) {
+        if (is422(err)) {
+          this.errors = err.response.data.errors;
+        }
+
+        this.status = err.response.status;
+        this.$emit("availability", this.hasAvailability);
+      }
+
+      this.loading = false;
     }
   },
   computed: {

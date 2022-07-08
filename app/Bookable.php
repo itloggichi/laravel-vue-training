@@ -19,10 +19,7 @@ class Bookable extends Model
     public function availableFor($from, $to): bool
     {
 
-        //return 0 === $this->bookings()->betweenDates($from, $to)->count();
-        return 0 !== $this->bookings()->betweenDates($from, $to)->count();
-        // in udemy, when availability is 0, it returns true (that it is available,
-        // but i got confused because if there is 0 availability, shouldn't it return false? but for this case I changed it
-        // so i wouldn't get an availability where there is no availability.
+        return 0 === $this->bookings()->betweenDates($from, $to)->count();
+        // fix: I misunderstood the count of bookings, in this case the count refers to the number of bookings within a period, therefore the user cannot book on those dates.
     }
 }

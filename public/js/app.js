@@ -2598,7 +2598,7 @@ var render = function render() {
       }
     }, [_vm._v(_vm._s(item.bookable.title))])], 1), _vm._v(" "), _c("span", {
       staticClass: "font-weight-bold"
-    }, [_vm._v("$" + _vm._s(item.price.total))])]), _vm._v(" "), _c("div", {
+    }, [_vm._v("₱" + _vm._s(item.price.total))])]), _vm._v(" "), _c("div", {
       staticClass: "pt-2 pb-2 d-flex justify-content-between"
     }, [_c("span", [_vm._v("From " + _vm._s(item.dates.from))]), _vm._v(" "), _c("span", [_vm._v("To " + _vm._s(item.dates.to))])]), _vm._v(" "), _c("div", {
       staticClass: "pt-2 pb-2 text-right"

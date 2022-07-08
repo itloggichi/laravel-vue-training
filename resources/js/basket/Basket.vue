@@ -66,7 +66,7 @@
                   :to="{name: 'bookable', params: {id: item.bookable.id}}"
                 >{{ item.bookable.title }}</router-link>
               </span>
-              <span class="font-weight-bold">${{ item.price.total }}</span>
+              <span class="font-weight-bold">₱{{ item.price.total }}</span>
             </div>
 
             <div class="pt-2 pb-2 d-flex justify-content-between">

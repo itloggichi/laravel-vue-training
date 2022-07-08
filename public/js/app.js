@@ -1967,6 +1967,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   data: function data() {
     return {
       loading: false,
+      bookingAttempted: false,
       customer: {
         first_names: null,
         last_name: null,
@@ -1979,11 +1980,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
     };
   },
-  computed: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["itemsInBasket"])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
+  computed: _objectSpread(_objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])(["itemsInBasket"])), Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])({
     basket: function basket(state) {
       return state.basket.items;
     }
-  })),
+  })), {}, {
+    success: function success() {
+      return !this.loading && 0 === this.itemsInBasket && this.bookingAttempted;
+    }
+  }),
   methods: {
     book: function book() {
       var _this = this;
@@ -1994,8 +1999,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             switch (_context.prev = _context.next) {
               case 0:
                 _this.loading = true;
-                _context.prev = 1;
-                _context.next = 4;
+                _this.bookingAttempted = false;
+                _this.errors = null;
+                _context.prev = 3;
+                _context.next = 6;
                 return axios.post("/api/checkout", {
                   customer: _this.customer,
                   bookings: _this.basket.map(function (basketItem) {
@@ -2007,25 +2014,27 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                   })
                 });
 
-              case 4:
+              case 6:
                 _this.$store.dispatch("clearBasket");
 
-                _context.next = 9;
+                _context.next = 12;
                 break;
 
-              case 7:
-                _context.prev = 7;
-                _context.t0 = _context["catch"](1);
-
               case 9:
-                _this.loading = false;
+                _context.prev = 9;
+                _context.t0 = _context["catch"](3);
+                _this.errors = _context.t0.response && _context.t0.response.data.errors;
 
-              case 10:
+              case 12:
+                _this.loading = false;
+                _this.bookingAttempted = true;
+
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[1, 7]]);
+        }, _callee, null, [[3, 9]]);
       }))();
     }
   }
@@ -2639,7 +2648,7 @@ var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
 
-  return _c("div", [_c("div", {
+  return _c("div", [_vm.success ? _c("success", [_vm._v("Thank you for booking!")]) : _c("div", {
     staticClass: "row"
   }, [_vm.itemsInBasket ? _c("div", {
     staticClass: "col-md-8"
@@ -2659,6 +2668,9 @@ var render = function render() {
       expression: "customer.first_names"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.first_names")
+    }],
     attrs: {
       type: "text",
       name: "first_names"
@@ -2673,7 +2685,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "first_names", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.first_names")
+    }
+  })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 form-group"
   }, [_c("label", {
     attrs: {
@@ -2687,6 +2703,9 @@ var render = function render() {
       expression: "customer.last_name"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.last_name")
+    }],
     attrs: {
       type: "text",
       name: "last_name"
@@ -2701,7 +2720,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "last_name", $event.target.value);
       }
     }
-  })])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.last_name")
+    }
+  })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-12 form-group"
@@ -2717,6 +2740,9 @@ var render = function render() {
       expression: "customer.email"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.email")
+    }],
     attrs: {
       type: "text",
       name: "email"
@@ -2731,7 +2757,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "email", $event.target.value);
       }
     }
-  })])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.email")
+    }
+  })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6 form-group"
@@ -2747,6 +2777,9 @@ var render = function render() {
       expression: "customer.street"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.street")
+    }],
     attrs: {
       type: "text",
       name: "street"
@@ -2761,7 +2794,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "street", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.street")
+    }
+  })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md-6 form-group"
   }, [_c("label", {
     attrs: {
@@ -2775,6 +2812,9 @@ var render = function render() {
       expression: "customer.city"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.city")
+    }],
     attrs: {
       type: "text",
       name: "city"
@@ -2789,7 +2829,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "city", $event.target.value);
       }
     }
-  })])]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.city")
+    }
+  })], 1)]), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-6 form-group"
@@ -2805,6 +2849,9 @@ var render = function render() {
       expression: "customer.country"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.country")
+    }],
     attrs: {
       type: "text",
       name: "country"
@@ -2819,7 +2866,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "country", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.country")
+    }
+  })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md-4 form-group"
   }, [_c("label", {
     attrs: {
@@ -2833,6 +2884,9 @@ var render = function render() {
       expression: "customer.state"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.state")
+    }],
     attrs: {
       type: "text",
       name: "state"
@@ -2847,7 +2901,11 @@ var render = function render() {
         _vm.$set(_vm.customer, "state", $event.target.value);
       }
     }
-  })]), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.state")
+    }
+  })], 1), _vm._v(" "), _c("div", {
     staticClass: "col-md-2 form-group"
   }, [_c("label", {
     attrs: {
@@ -2861,6 +2919,9 @@ var render = function render() {
       expression: "customer.zip"
     }],
     staticClass: "form-control",
+    "class": [{
+      "is-invalid": _vm.errorFor("customer.zip")
+    }],
     attrs: {
       type: "text",
       name: "zip"
@@ -2875,14 +2936,19 @@ var render = function render() {
         _vm.$set(_vm.customer, "zip", $event.target.value);
       }
     }
-  })])]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
+  }), _vm._v(" "), _c("v-errors", {
+    attrs: {
+      errors: _vm.errorFor("customer.zip")
+    }
+  })], 1)]), _vm._v(" "), _c("hr"), _vm._v(" "), _c("div", {
     staticClass: "row"
   }, [_c("div", {
     staticClass: "col-md-12 form-group"
   }, [_c("button", {
     staticClass: "btn btn-lg btn-primary btn-block",
     attrs: {
-      type: "submit"
+      type: "submit",
+      disabled: _vm.loading
     },
     on: {
       click: function click($event) {
@@ -2892,7 +2958,9 @@ var render = function render() {
     }
   }, [_vm._v("Book now!")])])])]) : _c("div", {
     staticClass: "col-md-8"
-  }, [_vm._m(0)]), _vm._v(" "), _c("div", {
+  }, [_c("div", {
+    staticClass: "jumbotron jumbotron-fluid text-center"
+  }, [_c("h1", [_vm._v("Empty")])])]), _vm._v(" "), _c("div", {
     staticClass: "col-md-4"
   }, [_c("div", {
     staticClass: "d-flex justify-content-between"
@@ -2934,17 +3002,10 @@ var render = function render() {
     }, [_c("i", {
       staticClass: "fas fa-trash-alt"
     })])])]);
-  }), 0)], 1)])]);
+  }), 0)], 1)])], 1);
 };
 
-var staticRenderFns = [function () {
-  var _vm = this,
-      _c = _vm._self._c;
-
-  return _c("div", {
-    staticClass: "jumbotron jumbotron-fluid text-center"
-  }, [_c("h1", [_vm._v("You have not made any bookings yet.")])]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 

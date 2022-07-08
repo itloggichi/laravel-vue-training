@@ -13,7 +13,7 @@ class CheckoutController extends Controller
     public function __invoke(Request $request)
     {
         $data = $request->validate([
-            'bookings' => 'required|array|min:1',
+            'bookings' => 'required|array|min:1', //check if it is an array
             'bookings.*.bookable_id' => 'required|exists:bookables,id',
             'bookings.*.from' => 'required|date|after_or_equal:today',
             'bookings.*.to' => 'required|date|after_or_equal:bookings.*.from',
@@ -40,13 +40,12 @@ class CheckoutController extends Controller
         $addressData = $data['customer'];
 
         $bookings = collect($bookingsData)->map(function ($bookingData) use ($addressData) {
-            //
+            $bookable = Bookable::findOrFail($bookingData['bookable_id']);
             $booking = new Booking();
             $booking->from = $bookingData['from'];
             $booking->to = $bookingData['to'];
-            $booking->price = 200;
-            $booking->bookable_id = $bookingData['bookable_id'];
-
+            $booking->price = $bookable->priceFor($booking->from, $booking->to)['total'];
+            $booking->bookable()->associate($bookable);
             $booking->address()->associate(Address::create($addressData));
 
             $booking->save();
